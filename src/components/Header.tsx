@@ -1,18 +1,21 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Droplets } from "lucide-react";
+import { Link } from "react-router-dom"; // <-- add this
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Keep all existing hash links for on-page sections
   const navItems = [
     { name: "Home", href: "#home" },
     { name: "Start a Drive", href: "#start-drive" },
     { name: "Join Drives", href: "#join-drives" },
     { name: "NGO Partners", href: "#ngo-partners" },
-    { name: "Impact Map", href: "#impact-map" },
+    // Impact Map should go to the route, not a hash
+    { name: "Impact Map", href: "/impact", isRoute: true },
     { name: "Contributors", href: "#contributors" },
-    { name: "Donate", href: "#donate" }
+    { name: "Donate", href: "#donate" },
   ];
 
   return (
@@ -32,15 +35,25 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
-            {navItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="text-foreground hover:text-primary transition-colors duration-200"
-              >
-                {item.name}
-              </a>
-            ))}
+            {navItems.map((item) =>
+              item.isRoute ? (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="text-foreground hover:text-primary transition-colors duration-200"
+                >
+                  {item.name}
+                </Link>
+              ) : (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className="text-foreground hover:text-primary transition-colors duration-200"
+                >
+                  {item.name}
+                </a>
+              )
+            )}
           </nav>
 
           {/* CTA Button */}
@@ -68,16 +81,27 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-border">
             <nav className="flex flex-col space-y-3">
-              {navItems.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="text-foreground hover:text-primary transition-colors duration-200 px-4 py-2"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </a>
-              ))}
+              {navItems.map((item) =>
+                item.isRoute ? (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className="text-foreground hover:text-primary transition-colors duration-200 px-4 py-2"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                ) : (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className="text-foreground hover:text-primary transition-colors duration-200 px-4 py-2"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.name}
+                  </a>
+                )
+              )}
               <div className="px-4 pt-2">
                 <Button variant="default" className="w-full bg-gradient-wave">
                   Get Started
